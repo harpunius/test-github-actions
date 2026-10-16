@@ -1,0 +1,64 @@
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
+replacers:
+  - target: 'change-title'
+    search: '/^(?:build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(?:\([^)]*\))?!?: (.*)$/'
+    replace: '\u$1'
+template: |
+  ## Changes
+
+  $CHANGES
+  
+  ## Contributors
+  
+  $CONTRIBUTORS
+
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+
+categories:
+  - title: 'Breaking Changes'
+    semver-increment: 'major'
+    exclusive: true
+    when:
+      conventional:
+        breaking: true
+  - title: 'Features'
+    semver-increment: 'minor'
+    exclusive: true
+    when:
+      conventional:
+        type: 'feat'
+  - title: 'Bug Fixes'
+    semver-increment: 'patch'
+    exclusive: true
+    when:
+      conventional:
+        type: 'fix'
+  - title: 'Maintenance'
+    semver-increment: 'patch'
+    exclusive: true
+    when:
+      conventional: 
+        types:
+          - 'build'
+          - 'chore'
+          - 'ci'
+          - 'perf'
+          - 'refactor'
+          - 'revert'
+          - 'style'
+          - 'test'
+  - title: 'Documentation'
+    semver-increment: 'patch'
+    exclusive: true
+    when:
+      conventional:
+        type: 'docs'
+  - title: 'Other changes'
+    semver-increment: 'patch'
+    exclusive: true
+  - type: 'pre-exclude'
+    when:
+      label: 'skip-changelog'
